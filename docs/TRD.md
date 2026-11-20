@@ -83,7 +83,14 @@ app-petits-pas/
 - **Contexte** : RM-01, RM-02 et RM-04. `toISOString()` renvoie une date UTC, fausse autour de minuit en France (risque du PRD §9).
 - **Décision** : `dateLocale()` construit `AAAA-MM-JJ` à partir de `getFullYear()`, `getMonth() + 1` et `getDate()`. Une habitude est faite aujourd'hui si `faitLe === dateLocale()`. Rien n'est remis à zéro dans le stockage : le changement de jour suffit.
 - **Alternatives écartées** : stocker un booléen `fait` et le remettre à zéro chaque jour (il faut détecter le changement de jour, ce qui est fragile) ; une bibliothèque de dates (une dépendance inutile).
-- **Conséquences** : la remise à zéro quotidienne est automatique, même si l'app reste fermée plusieurs jours. Si l'onglet reste ouvert après minuit, la liste est redessinée quand la page redevient visible (`visibilitychange`), par exemple quand on rouvre le navigateur sur mobile le lendemain. Si la page reste affichée au premier plan pendant minuit, l'affichage n'est à jour qu'à la prochaine action, ce qui est accepté en V1. Décocher remet `faitLe` à `null` : la validation précédente n'est pas conservée (aucun historique en V1, PRD §4.2).
+- **Conséquences** : la remise à zéro quotidienne est automatique, même si l'app reste fermée plusieurs jours. Si l'onglet reste ouvert après minuit, la liste est redessinée quand la page redevient visible (`visibilitychange`), par exemple quand on rouvre le navigateur sur mobile le lendemain. Si la page reste affichée au premier plan pendant minuit, l'affichage n'est à jour qu'à la prochaine action, ce qui est accepté en V1. Depuis ADR-005, l'état du jour se lit sur la dernière date de `jours` ; décocher retire la date du jour et rend la série d'avant.
+
+### ADR-005 · Série en cours dans `jours`, stockage v2 avec migration
+
+- **Contexte** : EX-008 et RM-05. Avec `faitLe` seul, on ne peut pas compter les jours consécutifs, ni rendre la série d'avant quand on décoche par erreur. Le PRD §11 demande de ne garder que la série en cours.
+- **Décision** : le champ `faitLe` est remplacé par `jours`, les dates de la série en cours. La clé passe à `petits-pas:v2`. `stockage.js` migre `v1` vers `v2` au premier chargement (BACKEND_SCHEMA §3). `habitudes.js` calcule l'état du jour et la série, et élague `jours` au chargement et à chaque coche. Le calcul de « hier » passe par la date locale (`setDate(jour - 1)`), jamais par une soustraction de 24 h, à cause des changements d'heure.
+- **Alternatives écartées** : un compteur `serie` à côté de `faitLe` (décocher par erreur ne peut pas rendre la série d'avant sans stocker un deuxième état) ; tout l'historique (hors périmètre, PRD §4.2).
+- **Conséquences** : une seule source de vérité (`jours`), et des données réduites au strict nécessaire. En revanche, les anciennes séries sont perdues, et il faut maintenir la migration tant que des navigateurs peuvent avoir des données v1.
 
 ## 6. Sécurité
 

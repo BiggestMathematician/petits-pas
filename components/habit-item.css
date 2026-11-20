@@ -50,6 +50,18 @@
   overflow-wrap: break-word;
 }
 
+/* État du jour et série, côte à côte, et à la ligne si la place manque */
+.habit-item__details {
+  display: flex;
+  flex-wrap: wrap;
+  column-gap: var(--space-3);
+}
+
+.habit-item__streak {
+  color: var(--color-text-muted);
+  font-size: var(--font-size-sm);
+}
+
 .habit-item__state {
   color: var(--color-text-muted);
   font-size: var(--font-size-sm);

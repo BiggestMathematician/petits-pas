@@ -25,15 +25,15 @@
   1. En-tête : `h1` « Petits pas », date du jour en toutes lettres, progression « X habitudes sur Y faites aujourd'hui » (EX-006).
   2. Formulaire « Ajouter une habitude » : Nom de l'habitude, bouton « Ajouter » (EX-001).
   3. Filtres : Toutes, À faire, Faites aujourd'hui (EX-005).
-  4. Liste des habitudes : case à cocher avec le nom, bouton « Supprimer » (EX-002 à EX-004).
+  4. Liste des habitudes : case à cocher avec le nom, sous le nom l'état du jour et « Série de N jours » si la série vaut au moins 1, bouton « Supprimer » (EX-002 à EX-004, EX-008).
   5. Zone de messages `role="status"`, partagée par toutes les actions.
 
 | Action | Résultat |
 | --- | --- |
 | Clic sur « Ajouter », nom vide, trop long ou déjà pris | Erreur sous le champ, reliée par `aria-describedby`, focus sur le champ |
 | Clic sur « Ajouter », nom valide | Habitude ajoutée à faire, champ vidé, focus sur le champ, message « Habitude ajoutée » ; si le filtre « Faites aujourd'hui » est actif, on repasse sur « Toutes » pour que l'habitude ajoutée soit visible |
-| Case cochée | Habitude faite aujourd'hui, progression mise à jour, message « Bravo : Boire 1,5 L d'eau est fait » |
-| Case décochée | Validation du jour annulée, progression mise à jour, message annoncé |
+| Case cochée | Habitude faite aujourd'hui, série et progression mises à jour, message « Bravo : Boire 1,5 L d'eau est fait. » suivi de « Série de 4 jours. » à partir de 2 jours |
+| Case décochée | Validation du jour annulée, la série d'avant revient, progression mise à jour, message annoncé |
 | Clic sur « Supprimer » | Habitude retirée, message « Habitude supprimée », focus sur l'habitude suivante ou sur le titre de la liste |
 | Clic sur un filtre | Liste filtrée, bouton actif en `aria-pressed="true"`, message « 2 habitudes affichées » |
 

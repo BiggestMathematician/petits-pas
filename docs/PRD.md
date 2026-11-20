@@ -41,6 +41,7 @@ On oublie ses habitudes en cours de journée, et on ne sait pas, le soir, ce qu'
 | RM-02 | Chaque nouveau jour, toutes les habitudes redeviennent « à faire », sans action de l'utilisatrice | — |
 | RM-03 | On peut annuler la validation du jour | Cochée par erreur, puis décochée |
 | RM-04 | « Aujourd'hui » se calcule avec la date locale de l'appareil, pas en UTC | — |
+| RM-05 | La série d'une habitude est le nombre de jours consécutifs validés qui se termine aujourd'hui ou hier ; sinon elle vaut 0. Une série en cours reste affichée jusqu'à la fin de la journée, même si l'habitude n'est pas encore cochée | Faite les 18, 19 et 20 : série de 3 le 20, encore 3 le 21 au matin, 4 si cochée le 21, 0 le 22 si elle ne l'a pas été |
 
 ### 5.2 Règles de données et de validation
 
@@ -60,6 +61,7 @@ On oublie ses habitudes en cours de journée, et on ne sait pas, le soir, ce qu'
 | EX-005 | Je veux filtrer mes habitudes, afin de voir ce qui reste | Filtres Toutes, À faire, Faites aujourd'hui ; le filtre actif est indiqué (`aria-pressed`) ; le nombre de résultats est annoncé ; un filtre sans résultat affiche un message dédié | Moyenne |
 | EX-006 | Je veux voir ma progression du jour, afin de rester motivée | « X habitudes sur Y faites aujourd'hui » en haut de page, mis à jour à chaque changement | Moyenne |
 | EX-007 | Je veux retrouver mes habitudes en revenant, afin de ne rien perdre | Après un rechargement, les habitudes et les validations du jour sont là ; si le stockage est indisponible, l'app fonctionne quand même et le signale discrètement | Haute |
+| EX-008 | Je veux voir ma série de jours consécutifs pour chaque habitude, afin de rester motivée | Chaque habitude dont la série vaut au moins 1 affiche « Série de N jours » (« 1 jour » au singulier) ; ce texte est lu avec la case par les lecteurs d'écran ; cocher annonce la nouvelle série à partir de 2 jours ; décocher le même jour rend la série d'avant ; la série survit au rechargement (RM-05) | Basse |
 
 > Une exigence = un identifiant stable. Le code, les commits et le plan d'implémentation y renvoient.
 
@@ -100,8 +102,10 @@ On oublie ses habitudes en cours de journée, et on ne sait pas, le soir, ce qu'
 | 2026-11-20 | Pas de backend : données dans le `localStorage` | Livrer la V1 en une journée | `BACKEND_SCHEMA.md` décrit le stockage local |
 | 2026-11-20 | Pas de notifications | Réduire le périmètre, rester sobre | — |
 | 2026-11-20 | Exception à « aucune image » (§6) : un favicon SVG de moins de 300 octets | Sans icône déclarée, le navigateur demande `/favicon.ico`, reçoit une 404 et l'écrit dans la console (Lighthouse, bonnes pratiques : 96) | `favicon.svg` à la racine ; ses couleurs reprennent les tokens, écrites en dur car un SVG externe ne lit pas les variables CSS |
+| 2026-11-20 | EX-008 entre dans le périmètre ; la série en cours reste affichée jusqu'à minuit même si l'habitude n'est pas encore cochée (RM-05) | Ne pas décourager le matin : une série ne se casse qu'à la fin d'une journée sans validation | RM-05 et EX-008 ajoutés au §5 |
+| 2026-11-20 | Pour la série, on ne garde que les dates de la série en cours, pas tout l'historique | Minimisation des données (RGPD) et sobriété ; l'historique détaillé reste hors périmètre (§4.2) | Stockage `petits-pas:v2`, champ `jours` à la place de `faitLe`, migration automatique depuis v1 (BACKEND_SCHEMA, TRD ADR-005) ; les anciennes séries sont perdues |
 
 ## Pour aller plus loin (si vous êtes en avance)
 
-- EX-008 : afficher la série de jours consécutifs pour chaque habitude.
+- ~~EX-008 : afficher la série de jours consécutifs pour chaque habitude.~~ Intégrée au §5.3 (voir §11).
 - EX-009 : renommer une habitude.

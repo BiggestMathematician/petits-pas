@@ -36,7 +36,7 @@ export function creerHabitude(nom, maintenant = new Date()) {
   return {
     id: crypto.randomUUID(),
     nom,
-    faitLe: null,
+    jours: [],
     creeLe: maintenant.toISOString(),
   };
 }
@@ -57,9 +57,48 @@ export function dateLocale(date = new Date()) {
   return `${annee}-${mois}-${jour}`;
 }
 
-/** Une habitude est faite aujourd'hui si sa dernière validation date d'aujourd'hui (RM-01). */
+/**
+ * Veille d'une date AAAA-MM-JJ, en date locale (ADR-005).
+ * On recule d'un jour du calendrier, pas de 24 h : les changements d'heure ne faussent rien.
+ */
+export function veille(jourIso) {
+  const [annee, mois, jour] = jourIso.split('-').map(Number);
+  return dateLocale(new Date(annee, mois - 1, jour - 1));
+}
+
+/** Une habitude est faite aujourd'hui si la dernière date de sa série est aujourd'hui (RM-01). */
 export function estFaiteAujourdhui(habitude, aujourdhui = dateLocale()) {
-  return habitude.faitLe === aujourdhui;
+  return habitude.jours.at(-1) === aujourdhui;
+}
+
+/**
+ * Ne garde que la suite de dates consécutives qui se termine aujourd'hui ou hier (RM-05, PRD §11).
+ * Reçoit des dates triées et sans doublon ; renvoie un nouveau tableau.
+ */
+export function elaguerJours(jours, aujourdhui = dateLocale()) {
+  const derniere = jours.at(-1);
+  if (derniere !== aujourdhui && derniere !== veille(aujourdhui)) return [];
+
+  const serie = [derniere];
+  for (let i = jours.length - 2; i >= 0 && jours[i] === veille(serie[0]); i -= 1) {
+    serie.unshift(jours[i]);
+  }
+  return serie;
+}
+
+/** Série en cours, en jours (RM-05) : 0 si la dernière validation date d'avant-hier ou plus. */
+export function serie(habitude, aujourdhui = dateLocale()) {
+  return elaguerJours(habitude.jours, aujourdhui).length;
+}
+
+/** « Série de 3 jours », « Série de 1 jour » (EX-008). */
+export function texteSerie(nombre) {
+  return `Série de ${nombre} jour${nombre > 1 ? 's' : ''}`;
+}
+
+/** Élague la série de chaque habitude, pour ne rien garder de plus que nécessaire (PRD §11). */
+export function elaguerToutes(habitudes, aujourdhui = dateLocale()) {
+  return habitudes.map((habitude) => ({ ...habitude, jours: elaguerJours(habitude.jours, aujourdhui) }));
 }
 
 /** Retire une habitude, sans modifier la liste reçue (EX-004). */
@@ -119,11 +158,13 @@ export function dateEnLettres(date = new Date()) {
 }
 
 /**
- * Coche ou décoche une habitude pour aujourd'hui (EX-003, RM-03), sans modifier la liste reçue.
- * Décocher annule la validation du jour : faitLe repasse à null.
+ * Coche ou décoche une habitude pour aujourd'hui (EX-003, RM-03, EX-008), sans modifier la liste reçue.
+ * Cocher ajoute aujourd'hui à la série en cours ; décocher le retire, et la série d'avant revient.
  */
 export function basculerFait(habitudes, id, fait, aujourdhui = dateLocale()) {
-  return habitudes.map((habitude) =>
-    habitude.id === id ? { ...habitude, faitLe: fait ? aujourdhui : null } : habitude,
-  );
+  return habitudes.map((habitude) => {
+    if (habitude.id !== id) return habitude;
+    const sansAujourdhui = elaguerJours(habitude.jours, aujourdhui).filter((jour) => jour !== aujourdhui);
+    return { ...habitude, jours: fait ? [...sansAujourdhui, aujourdhui] : sansAujourdhui };
+  });
 }

@@ -15,6 +15,9 @@ import {
   FILTRES,
   filtrer,
   texteNombreAffichees,
+  serie,
+  texteSerie,
+  elaguerToutes,
 } from './habitudes.js';
 import { charger, enregistrer } from './stockage.js';
 
@@ -123,15 +126,30 @@ function creerLigne(habitude, aujourdhui) {
   nom.className = 'habit-item__name';
   nom.textContent = habitude.nom;
 
-  // Repère visuel sous le nom : l'état est déjà annoncé par la case, on ne le lit pas deux fois.
+  // Ligne sous le nom, en aria-hidden pour ne pas s'ajouter au nom de la case :
+  // l'état est déjà porté par la case, la série lui est reliée par aria-describedby (EX-008).
+  const details = document.createElement('span');
+  details.className = 'habit-item__details';
+  details.setAttribute('aria-hidden', 'true');
+
   const etat = document.createElement('span');
   etat.className = 'habit-item__state';
-  etat.setAttribute('aria-hidden', 'true');
   etat.textContent = faite ? 'Fait' : 'À faire';
+  details.append(etat);
+
+  const jours = serie(habitude, aujourdhui);
+  if (jours > 0) {
+    const texteDeSerie = document.createElement('span');
+    texteDeSerie.className = 'habit-item__streak';
+    texteDeSerie.id = `serie-${habitude.id}`;
+    texteDeSerie.textContent = texteSerie(jours);
+    details.append(texteDeSerie);
+    caseACocher.setAttribute('aria-describedby', texteDeSerie.id);
+  }
 
   const texte = document.createElement('span');
   texte.className = 'habit-item__text';
-  texte.append(nom, etat);
+  texte.append(nom, details);
 
   label.append(caseACocher, texte);
 
@@ -269,11 +287,14 @@ function surCoche(evenement) {
 
   if (!caseACocher.checked) {
     annoncer(MESSAGES.aFaire(habitude.nom));
-  } else if (progression(habitudes).toutEstFait) {
-    annoncer(`${MESSAGES.faite(habitude.nom)}. ${MESSAGES.toutFait}`);
-  } else {
-    annoncer(MESSAGES.faite(habitude.nom));
+    return;
   }
+  // « Bravo : Boire est fait. Série de 4 jours. Tout est fait pour aujourd'hui. »
+  const morceaux = [`${MESSAGES.faite(habitude.nom)}.`];
+  const jours = serie(habitudes.find((h) => h.id === id));
+  if (jours >= 2) morceaux.push(`${texteSerie(jours)}.`);
+  if (progression(habitudes).toutEstFait) morceaux.push(MESSAGES.toutFait);
+  annoncer(morceaux.join(' '));
 }
 
 /**
@@ -322,8 +343,11 @@ function surRetourSurLaPage() {
 /** Démarrage : on recharge les habitudes enregistrées (EX-007). */
 function demarrer() {
   const { habitudes: enregistrees, disponible } = charger();
-  habitudes = enregistrees;
-  if (!disponible) {
+  // On efface les séries cassées dès l'ouverture : on ne garde que le nécessaire (PRD §11).
+  habitudes = elaguerToutes(enregistrees);
+  if (disponible) {
+    sauvegarder();
+  } else {
     signalerStockageIndisponible();
   }
   elements.form.addEventListener('submit', surAjout);

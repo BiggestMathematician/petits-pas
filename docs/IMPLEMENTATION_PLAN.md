@@ -10,6 +10,7 @@
 | 1 · MVP | Toutes les exigences EX-001 à EX-007, les « Haute » d'abord | Chaque exigence passe ses critères d'acceptation, testés à la main et au clavier |
 | 2 · Finitions | Audit RGAA, éco-conception, responsive | Aucune non-conformité bloquante ; Lighthouse accessibilité ≥ 95 ; page < 100 Ko ; utilisable à 320 px |
 | 3 · Mise en ligne | Déploiement sur GitHub Pages | Validation humaine avant le push ; test de persistance refait en ligne |
+| 4 · Pour aller plus loin | Exigences ajoutées après la V1 (PRD §11) | Mêmes critères que la phase 1, et les données v1 déjà en ligne restent lisibles |
 
 ## 2. Lots
 
@@ -24,6 +25,7 @@
 | L1.6 | 1 | Filtres : Toutes, À faire, Faites aujourd'hui ; `aria-pressed` ; annonce du nombre d'habitudes affichées ; état « Aucune habitude dans cette catégorie » | EX-005 | Fait, à relire |
 | L2.1 | 2 | Audit RGAA avec le skill `audit-rgaa`, puis correctifs ; Lighthouse ; poids de la page ; test à 320 px et des cibles de 44 px ; validation HTML W3C | PRD §6 | Fait, à relire (Lighthouse : 100 dans les quatre catégories après l'ajout du favicon ; HTML validé par tidy 5.8) |
 | L3.1 | 3 | Dépôt GitHub, publication sur Pages (TRD §8) ; test en ligne : ajouter, cocher, recharger | PRD §7 | Fait : https://biggestmathematician.github.io/petits-pas/ |
+| L4.1 | 4 | Série de jours consécutifs : champ `jours`, stockage v2 et migration depuis v1, élagage, affichage « Série de N jours » relié à la case, annonce à partir de 2 jours | EX-008, RM-05 | Fait, à relire (en local, pas encore en ligne) |
 
 > Un lot doit tenir en une conversation, soit 10 à 15 minutes. Trop gros ? Découpez-le.
 > L'ordre suit le conseil du tuto : l'ajout et la liste ensemble, puis la persistance tout de suite, pour ne pas perdre les données de test.
