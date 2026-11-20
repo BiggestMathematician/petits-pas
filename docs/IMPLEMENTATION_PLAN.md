@@ -23,7 +23,7 @@
 | L1.5 | 1 | Supprimer : bouton dont le nom accessible contient le nom de l'habitude ; message « Habitude supprimée » ; focus sur l'habitude suivante, ou sur le titre « Mes habitudes » (`tabindex="-1"`) | EX-004 | Fait, à relire |
 | L1.6 | 1 | Filtres : Toutes, À faire, Faites aujourd'hui ; `aria-pressed` ; annonce du nombre d'habitudes affichées ; état « Aucune habitude dans cette catégorie » | EX-005 | Fait, à relire |
 | L2.1 | 2 | Audit RGAA avec le skill `audit-rgaa`, puis correctifs ; Lighthouse ; poids de la page ; test à 320 px et des cibles de 44 px ; validation HTML W3C | PRD §6 | Fait, à relire (Lighthouse : 100 dans les quatre catégories après l'ajout du favicon ; HTML validé par tidy 5.8) |
-| L3.1 | 3 | Dépôt GitHub, publication sur Pages (TRD §8) ; test en ligne : ajouter, cocher, recharger | PRD §7 | À faire |
+| L3.1 | 3 | Dépôt GitHub, publication sur Pages (TRD §8) ; test en ligne : ajouter, cocher, recharger | PRD §7 | Fait : https://biggestmathematician.github.io/petits-pas/ |
 
 > Un lot doit tenir en une conversation, soit 10 à 15 minutes. Trop gros ? Découpez-le.
 > L'ordre suit le conseil du tuto : l'ajout et la liste ensemble, puis la persistance tout de suite, pour ne pas perdre les données de test.
