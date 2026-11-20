@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self'; base-uri 'none'; form-action 'none'">
+    <meta name="description" content="Petits pas : cochez vos petites habitudes du jour, sans compte ni notification.">
+    <title>Petits pas</title>
+    <!-- Seule image de l'app : exception notée au PRD §11. Couleurs reprises de --color-primary et --color-on-primary. -->
+    <link rel="icon" href="./favicon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="./styles/tokens.css">
+    <link rel="stylesheet" href="./styles/base.css">
+    <link rel="stylesheet" href="./components/button.css">
+    <link rel="stylesheet" href="./components/form.css">
+    <link rel="stylesheet" href="./components/filters.css">
+    <link rel="stylesheet" href="./components/habit-item.css">
+    <script type="module" src="./scripts/app.js"></script>
+  </head>
+  <body>
+    <div class="page">
+      <!-- Zone 1 · En-tête : titre, date du jour, progression (EX-006, lot L1.4) -->
+      <header class="page__header">
+        <h1>Petits pas</h1>
+        <p class="page__date" id="date-du-jour"></p>
+        <p class="page__progress" id="progression"></p>
+        <p class="page__done" id="tout-fait" hidden>Tout est fait pour aujourd’hui.</p>
+      </header>
+
+      <main class="page__main">
+        <!-- Zone 2 · Formulaire d'ajout (EX-001, lot L1.1) -->
+        <section class="page__section" aria-labelledby="titre-ajout">
+          <h2 id="titre-ajout">Ajouter une habitude</h2>
+
+          <form class="form" id="form-ajout" novalidate>
+            <div class="form__field">
+              <label class="form__label" for="nom-habitude">Nom de l'habitude</label>
+              <p class="form__hint" id="aide-nom">Obligatoire, 60 caractères maximum. Par exemple : « Boire 1,5 L d’eau ».</p>
+              <input class="form__input" id="nom-habitude" name="nom" type="text" autocomplete="off" aria-required="true" aria-describedby="aide-nom">
+              <p class="form__error" id="erreur-nom" hidden></p>
+            </div>
+            <button class="button button--primary" type="submit">Ajouter</button>
+          </form>
+        </section>
+
+        <section class="page__section" aria-labelledby="titre-habitudes">
+          <h2 id="titre-habitudes" tabindex="-1">Mes habitudes</h2>
+
+          <!-- Zone 3 · Filtres (EX-005, lot L1.6) -->
+          <div class="filters" id="filtres" role="group" aria-label="Filtrer les habitudes">
+            <button class="button button--secondary" type="button" data-filtre="toutes" aria-pressed="true">Toutes</button>
+            <button class="button button--secondary" type="button" data-filtre="a-faire" aria-pressed="false">À faire</button>
+            <button class="button button--secondary" type="button" data-filtre="faites" aria-pressed="false">Faites aujourd’hui</button>
+          </div>
+
+          <!-- Zone 4 · Liste des habitudes (EX-002 à EX-004, lots L1.1, L1.3, L1.5) -->
+          <ul class="habit-list" id="liste-habitudes"></ul>
+          <p class="note" id="etat-liste"></p>
+        </section>
+
+        <!-- Zone 5 · Messages de statut, partagée par toutes les actions.
+             Masquée visuellement : chaque action a déjà un retour visible à l'écran,
+             la zone sert aux lecteurs d'écran (évite d'afficher deux fois le même texte). -->
+        <p class="visually-hidden" id="message" role="status"></p>
+
+        <!-- Stockage indisponible (EX-007, lot L1.2) -->
+        <p class="note" id="note-stockage" hidden></p>
+      </main>
+    </div>
+  </body>
+</html>

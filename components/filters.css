@@ -1,0 +1,19 @@
+/* Filtres · DESIGN_SYSTEM §2. Uniquement des tokens. */
+
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+/* Filtre actif : fond plein ET texte en gras, pour ne pas reposer sur la couleur seule */
+.filters [aria-pressed="true"] {
+  border-color: var(--color-primary);
+  background-color: var(--color-primary);
+  color: var(--color-on-primary);
+  font-weight: var(--font-weight-bold);
+}
+
+.filters [aria-pressed="true"]:hover {
+  background-color: var(--color-primary-hover);
+}

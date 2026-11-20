@@ -1,0 +1,49 @@
+/* Boutons · DESIGN_SYSTEM §2. Uniquement des tokens. */
+
+.button {
+  min-height: var(--target-min);
+  min-width: var(--target-min);
+  padding: var(--space-2) var(--space-4);
+  border: var(--border-width) solid transparent;
+  border-radius: var(--radius-md);
+  font-family: inherit;
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-bold);
+  line-height: var(--line-height);
+  cursor: pointer;
+}
+
+/* Primaire : un seul par écran, « Ajouter » */
+.button--primary {
+  background-color: var(--color-primary);
+  color: var(--color-on-primary);
+}
+
+.button--primary:hover {
+  background-color: var(--color-primary-hover);
+}
+
+/* Discret : actions secondaires répétées, comme « Supprimer » sur chaque ligne */
+.button--quiet {
+  padding-inline: var(--space-3);
+  border-color: var(--color-border);
+  background-color: transparent;
+  color: var(--color-primary);
+  font-weight: var(--font-weight-normal);
+}
+
+.button--quiet:hover {
+  text-decoration: underline;
+}
+
+/* Secondaire : boutons de filtre */
+.button--secondary {
+  border-color: var(--color-border);
+  background-color: var(--color-surface);
+  color: var(--color-primary);
+  font-weight: var(--font-weight-normal);
+}
+
+.button--secondary:hover {
+  border-color: var(--color-primary);
+}
